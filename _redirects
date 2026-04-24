@@ -1,0 +1,2 @@
+# Pretty URL for Privacy Policy (optional; host must honor Netlify-style redirects)
+/privacy   /privacy.html   200

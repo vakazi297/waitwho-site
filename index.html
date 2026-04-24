@@ -1,0 +1,968 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#05060d" />
+    <meta name="color-scheme" content="dark" />
+
+    <title>WaitWHO — What's still out there?</title>
+    <meta name="description" content="Upload a photo and search public images for visually similar matches across the web. WaitWHO surfaces possible matches so you can review what may be publicly visible." />
+
+    <!-- Open Graph / social previews -->
+    <meta property="og:title" content="WaitWHO — What's still out there?" />
+    <meta property="og:description" content="Search public images for visually similar matches. Review what may be publicly visible about a face." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://waitwho.app/" />
+    <!-- ASSET: swap in a 1200x630 social image in /assets/og-cover.png -->
+    <meta property="og:image" content="assets/og-cover.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Using the full logo as favicon until a dedicated 512×512 square app icon is exported. -->
+    <link rel="icon" type="image/png" href="assets/waitwho-logo.png" />
+    <link rel="apple-touch-icon" href="assets/waitwho-logo.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" />
+
+    <link rel="stylesheet" href="styles.css?v=18" />
+
+    <!-- FAQPage structured data — eligible for rich results in Google.
+         Keep copy in sync with the <section id="faq"> block below. -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is WaitWHO?",
+                "acceptedAnswer": { "@type": "Answer", "text": "WaitWHO is a face-search app. Upload a photo and we search publicly available images across the web for visually similar matches, so you can review what may be publicly visible." }
+            },
+            {
+                "@type": "Question",
+                "name": "Is WaitWHO available on iPhone?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes — WaitWHO is currently iPhone-only. Android support is planned for Summer 2026." }
+            },
+            {
+                "@type": "Question",
+                "name": "What kind of websites are searched?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Results may include publicly available pages such as social profiles, articles, image platforms, forums, archived pages, and other indexed public sources." }
+            },
+            {
+                "@type": "Question",
+                "name": "Is WaitWHO searching private accounts?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. WaitWHO only searches publicly available sources. Private accounts, locked content, and anything behind a login are not searched." }
+            },
+            {
+                "@type": "Question",
+                "name": "What happens to my photo after the scan?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Your uploaded image is used to run the search and isn't kept long-term. Once the scan completes, the image is purged from our systems. We never sell photos, add them to a public index, or use them to train models." }
+            },
+            {
+                "@type": "Question",
+                "name": "Does WaitWHO remove content for me?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. WaitWHO is a search and awareness tool — it doesn't file takedowns or remove content on your behalf. The in-app guides walk you through the options available directly from the hosting platform." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why should I try multiple photos?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Different photos can produce different results. Lighting, age, hairstyle, angle, glasses, and how much of the face is visible all affect similarity matching." }
+            },
+            {
+                "@type": "Question",
+                "name": "How do I find old photos of myself online?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Try both recent and older photos in WaitWHO and compare the results. Older photos can surface archived pages that newer ones miss, and vice versa." }
+            },
+            {
+                "@type": "Question",
+                "name": "Why did my results change later?",
+                "acceptedAnswer": { "@type": "Answer", "text": "The web changes constantly. New pages get indexed, old pages disappear, and the public sources we search update over time — so the same photo can return different matches on different days." }
+            },
+            {
+                "@type": "Question",
+                "name": "What does Premium include?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Premium plans may include recurring rescans, alerts when new possible matches are detected, additional included searches, and expanded monitoring tools." }
+            },
+            {
+                "@type": "Question",
+                "name": "Will I get alerts if something new appears?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Premium users may receive notifications when new possible matches are detected during scheduled rescans." }
+            },
+            {
+                "@type": "Question",
+                "name": "What if I find a photo I don't want online?",
+                "acceptedAnswer": { "@type": "Answer", "text": "WaitWHO includes guides covering common removal requests, reporting steps, and opt-out forms for major search indexes and face-search services." }
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <!-- Shared SVG defs: a single source of truth for the App Store badge
+         art so it can be referenced via <use> from every placement.
+         Text is rendered with real <text> nodes + system fonts instead of
+         hand-traced letter paths — keeps the lettering crisp at every size
+         and avoids the brittle path-data approach. -->
+    <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+        <defs>
+            <symbol id="app-store-badge-art" viewBox="0 0 135 40">
+                <rect x="0.5" y="0.5" width="134" height="39" rx="6" fill="#000" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+                <!-- Apple logo. 22×22 source, scaled to ~18px tall and
+                     centered vertically in the 40px badge. -->
+                <g transform="translate(10, 8) scale(0.85)" fill="#fff">
+                    <path d="M15.769.442c.021 0 .041 0 .063 0 .152 1.887-.569 3.297-1.447 4.319-.861 1.015-2.041 1.998-3.947 1.849-.127-1.859.596-3.164 1.474-4.184.814-.951 2.305-1.796 3.857-1.984zm5.058 16.694c0 .019 0 .036 0 .054-.47 1.424-1.14 2.644-1.957 3.776-.747 1.028-1.662 2.412-3.296 2.412-1.412 0-2.35-.908-3.797-.933-1.531-.025-2.373.759-3.773.957-.16 0-.32 0-.477 0-1.028-.149-1.857-.962-2.461-1.695-1.782-2.168-3.158-4.967-3.414-8.551 0-.351 0-.701 0-1.051.109-2.566 1.355-4.652 3.011-5.663.874-.536 2.075-.993 3.412-.789.573.089 1.159.285 1.673.48.486.187 1.093.519 1.669.501.39-.011.779-.214 1.172-.358 1.154-.417 2.285-.894 3.775-.67 1.791.271 3.063 1.067 3.849 2.295-1.515.965-2.714 2.42-2.509 4.909.181 2.263 1.497 3.586 3.123 4.326z"/>
+                </g>
+                <text x="34" y="17"
+                      fill="#fff"
+                      font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+                      font-size="7.5"
+                      font-weight="400"
+                      letter-spacing="0.15">Download on the</text>
+                <text x="34" y="32"
+                      fill="#fff"
+                      font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+                      font-size="16"
+                      font-weight="600"
+                      letter-spacing="-0.3">App Store</text>
+            </symbol>
+        </defs>
+    </svg>
+
+    <!-- Background scaffolding: all purely decorative, aria-hidden -->
+    <div class="bg-layer bg-grid" aria-hidden="true"></div>
+    <div class="bg-layer bg-glow" aria-hidden="true"></div>
+    <canvas id="particles" class="bg-layer bg-particles" aria-hidden="true"></canvas>
+
+    <!-- =========================================================
+         NAV
+    ========================================================== -->
+    <header class="nav" role="banner">
+        <a class="nav__brand" href="#top" aria-label="WaitWHO home">
+            <img class="brand-logo" src="assets/waitwho-logo.png" alt="WaitWHO" />
+        </a>
+
+        <nav class="nav__links" aria-label="Primary">
+            <a href="#how">How it works</a>
+            <a href="#results">Results</a>
+            <a href="#different">Why us</a>
+            <a href="#premium">Premium</a>
+            <a href="#privacy">Privacy</a>
+            <a href="#guides">Guides</a>
+            <a href="#faq">FAQ</a>
+        </nav>
+
+        <!-- Desktop CTA — App Store badge: set APP_STORE_URL in script.js when live; until then links go to #download. -->
+        <a class="app-store-badge app-store-badge--sm nav__cta"
+           href="#download"
+           data-app-store
+           aria-label="Download WaitWHO on the App Store"
+           data-event="download_nav">
+            <svg viewBox="0 0 135 40" role="img" aria-hidden="true" focusable="false">
+                <use href="#app-store-badge-art"></use>
+            </svg>
+        </a>
+
+        <!-- Mobile hamburger — visible <=820px. JS toggles .mobile-menu.is-open -->
+        <button class="nav__hamburger"
+                type="button"
+                aria-label="Open menu"
+                aria-expanded="false"
+                aria-controls="mobile-menu">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </button>
+    </header>
+
+    <!-- Mobile slide-in menu. Rendered outside <header> so the backdrop
+         can cover the full viewport independent of the sticky nav.
+         Backdrop is placed before the panel so the panel paints above it
+         without needing explicit z-index overrides. -->
+    <aside id="mobile-menu" class="mobile-menu" aria-hidden="true" aria-label="Mobile menu">
+        <div class="mobile-menu__backdrop" data-close-menu></div>
+        <div class="mobile-menu__panel">
+            <nav class="mobile-menu__links" aria-label="Mobile primary">
+                <a href="#how">How it works</a>
+                <a href="#results">Results</a>
+                <a href="#different">Why us</a>
+                <a href="#premium">Premium</a>
+                <a href="#privacy">Privacy</a>
+                <a href="#guides">Guides</a>
+                <a href="#faq">FAQ</a>
+            </nav>
+            <div class="mobile-menu__cta">
+                <a class="app-store-badge" href="#download" data-app-store aria-label="Download WaitWHO on the App Store" data-event="download_mobile">
+                    <svg viewBox="0 0 135 40" role="img" aria-hidden="true" focusable="false">
+                        <use href="#app-store-badge-art"></use>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+
+    <main id="top">
+
+        <!-- =====================================================
+             1 · HERO
+        ====================================================== -->
+        <section class="hero" aria-labelledby="hero-title">
+            <!-- Atmospheric terminal whispers (matches iOS scan loader). Filled by script.js -->
+            <div class="hero__terminal" id="hero-terminal" aria-hidden="true"></div>
+            <div class="hero__inner container">
+                <div class="hero__copy reveal">
+                    <span class="eyebrow">
+                        <span class="eyebrow__dot"></span>
+                        PUBLIC IMAGE SEARCH · VISUAL SIMILARITY
+                    </span>
+
+                    <h1 id="hero-title" class="hero__title">
+                        <span class="gradient-text">What's still<br />out there?</span>
+                    </h1>
+
+                    <p class="hero__sub">
+                        Upload a photo and search public images for visually similar matches across the web.
+                    </p>
+
+                    <div class="hero__ctas">
+                        <a class="app-store-badge app-store-badge--lg"
+                           href="#download"
+                           data-app-store
+                           aria-label="Download WaitWHO on the App Store"
+                           data-event="download_hero">
+                            <svg viewBox="0 0 135 40" role="img" aria-hidden="true" focusable="false">
+                                <use href="#app-store-badge-art"></use>
+                            </svg>
+                        </a>
+                        <a href="#how" class="btn btn--ghost">See How It Works</a>
+                    </div>
+
+                    <p class="hero__typed" aria-live="polite">
+                        <span class="hero__typed-label">&gt;&nbsp;</span><span id="typed" class="hero__typed-text"></span><span class="hero__caret" aria-hidden="true"></span>
+                    </p>
+                </div>
+
+                <!-- Phone mockup -->
+                <div class="hero__device reveal" aria-hidden="true">
+                    <!-- Chasing neon halo (replaces static scan rings) -->
+                    <div class="hero-device-aura" aria-hidden="true">
+                        <div class="hero-device-aura__band hero-device-aura__band--cyan"></div>
+                        <div class="hero-device-aura__band hero-device-aura__band--magenta"></div>
+                    </div>
+
+                    <div class="phone">
+                        <div class="phone__notch"></div>
+                        <div class="phone__screen">
+                            <!-- Looping real screens: home → ready to scan → results summary → matches list -->
+                            <img class="phone__screen-img"
+                                 src="assets/hero-screens-loop.gif?v=1"
+                                 width="390"
+                                 height="844"
+                                 alt=""
+                                 decoding="async"
+                                 fetchpriority="high" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a class="hero__scroll" href="#trust" aria-label="Scroll to trust strip">
+                <span></span>
+            </a>
+        </section>
+
+        <!-- =====================================================
+             2 · TRUST / SAFETY STRIP
+        ====================================================== -->
+        <section id="trust" class="trust" aria-label="Trust and safety summary">
+            <div class="container">
+                <ul class="trust__grid">
+                    <li class="trust__card reveal">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm0-14a6 6 0 1 0 6 6 6 6 0 0 0-6-6Zm0 10a4 4 0 1 1 0-8 4 4 0 0 1 0 8Z"/></svg>
+                        <div>
+                            <strong>Public web search</strong>
+                            <span>We look only at publicly available images.</span>
+                        </div>
+                    </li>
+                    <li class="trust__card reveal">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 2h6l1 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3l1-4Zm3 6a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6Z"/></svg>
+                        <div>
+                            <strong>Visual similarity only</strong>
+                            <span>We compare what images look like — not who someone is.</span>
+                        </div>
+                    </li>
+                    <li class="trust__card reveal">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1 3 5v6c0 5 3.8 9.7 9 11 5.2-1.3 9-6 9-11V5l-9-4Zm-1 15-4-4 1.4-1.4L11 13.2l5.6-5.6L18 9l-7 7Z"/></svg>
+                        <div>
+                            <strong>Results may vary</strong>
+                            <span>Matches depend on what's indexed in public sources.</span>
+                        </div>
+                    </li>
+                    <li class="trust__card reveal">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 15h-2v-2h2Zm0-4h-2V7h2Z"/></svg>
+                        <div>
+                            <strong>Responsible use required</strong>
+                            <span>Only search images you're authorized to use.</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             3 · HOW IT WORKS
+        ====================================================== -->
+        <section id="how" class="section" aria-labelledby="how-title">
+            <div class="container">
+                <header class="section__head reveal">
+                    <span class="eyebrow">
+                        <span class="eyebrow__dot"></span>
+                        HOW IT WORKS
+                    </span>
+                    <h2 id="how-title" class="section__title">
+                        <span class="gradient-text">Three steps. One reveal.</span>
+                    </h2>
+                    <p class="section__sub">
+                        A focused flow built around a single question — what's out there that resembles this face?
+                    </p>
+                </header>
+
+                <ol class="steps">
+                    <li class="step reveal">
+                        <div class="step__num">01</div>
+                        <div class="step__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 3 7 8h3v8h4V8h3Zm-8 16h16v2H4Z"/></svg>
+                        </div>
+                        <h3>Upload a photo</h3>
+                        <p>Choose a clear, front-facing photo you're authorized to use.</p>
+                    </li>
+                    <li class="step reveal">
+                        <div class="step__num">02</div>
+                        <div class="step__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 3v14h14v2H5V3Zm4 8h6v6h-2v-4h-4Z"/></svg>
+                        </div>
+                        <h3>Crop and confirm</h3>
+                        <p>Frame the face, review the scan disclosures, and confirm you're 18+.</p>
+                    </li>
+                    <li class="step reveal">
+                        <div class="step__num">03</div>
+                        <div class="step__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2Zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12Z"/></svg>
+                        </div>
+                        <h3>Review possible matches</h3>
+                        <p>See visually similar images and source links across public pages.</p>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             4 · RESULTS
+        ====================================================== -->
+        <section id="results" class="section section--split" aria-labelledby="results-title">
+            <div class="container split">
+                <div class="split__copy reveal">
+                    <span class="eyebrow">
+                        <span class="eyebrow__dot"></span>
+                        RESULTS
+                    </span>
+                    <h2 id="results-title" class="section__title">
+                        <span class="gradient-text">See possible matches across public sources</span>
+                    </h2>
+                    <p class="section__sub">
+                        WaitWHO surfaces visually similar images and source links so you can review what may be publicly visible.
+                    </p>
+
+                    <div class="note note--warn">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2 1 22h22Zm0 6 7.5 13h-15Zm-1 5v4h2v-4Zm0 5v2h2v-2Z"/></svg>
+                        <p>Similarity is not identity confirmation. Review results carefully.</p>
+                    </div>
+                </div>
+
+                <div class="split__visual reveal">
+                    <!-- Stylized result UI card stack. Marked for easy replacement with real screenshots. -->
+                    <!-- ASSET: optional /assets/app-screen-results.png can replace these mock cards. -->
+                    <div class="result-cards">
+                        <article class="glass-card result-card result-card--hero">
+                            <div class="result-card__head">
+                                <span class="badge badge--cyan">POSSIBLE MATCHES</span>
+                                <span class="result-card__count">12</span>
+                            </div>
+                            <div class="result-card__bar">
+                                <span style="--w: 78%"></span>
+                            </div>
+                            <div class="result-card__row">
+                                <span>Match confidence</span>
+                                <strong class="gradient-text">78%</strong>
+                            </div>
+                            <div class="result-card__row">
+                                <span>Similar-image presence</span>
+                                <strong>High</strong>
+                            </div>
+                        </article>
+
+                        <article class="glass-card result-card">
+                            <div class="result-card__head">
+                                <span class="badge badge--magenta">SOURCES</span>
+                            </div>
+                            <ul class="source-list">
+                                <li><span class="source-dot"></span> Social media profile</li>
+                                <li><span class="source-dot"></span> Image board thread</li>
+                                <li><span class="source-dot"></span> Archived news page</li>
+                                <li><span class="source-dot"></span> Forum attachment</li>
+                            </ul>
+                        </article>
+
+                        <article class="glass-card result-card result-card--mini">
+                            <div class="result-card__head">
+                                <span class="badge badge--purple">EXPOSURE</span>
+                            </div>
+                            <div class="result-card__grade">
+                                <span class="result-card__grade-mark">B-</span>
+                                <span class="result-card__grade-label">Moderate visibility</span>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             4B · HOW WAITWHO IS DIFFERENT
+             Four proprietary strengths we actually have. No competitor
+             naming, no comparison claims — Apple-safe, and reads as a
+             statement of capability rather than a dig at anyone else.
+        ====================================================== -->
+        <section id="different" class="section" aria-labelledby="different-title">
+            <div class="container">
+                <header class="section__head section__head--center reveal">
+                    <span class="eyebrow">
+                        <span class="eyebrow__dot"></span>
+                        WHY WAITWHO
+                    </span>
+                    <h2 id="different-title" class="section__title">
+                        <span class="gradient-text">Built for what happens after the search.</span>
+                    </h2>
+                    <p class="section__sub">
+                        Most face-search tools stop at a list of links. WaitWHO keeps going — explaining what the results mean, what to do next, and what happens to your photo.
+                    </p>
+                </header>
+
+                <div class="diff-grid">
+                    <article class="glass-card diff reveal">
+                        <div class="diff__num">01</div>
+                        <h3>Interpretation layer</h3>
+                        <p>Exposure grade, confidence scoring, and a platform breakdown — so a list of links becomes an answer, not a homework assignment.</p>
+                    </article>
+                    <article class="glass-card diff reveal">
+                        <div class="diff__num">02</div>
+                        <h3>Post-scan guides</h3>
+                        <p>Step-by-step walkthroughs for PimEyes, Google, Bing, and more — plus first-response guides for leak sites and resurfaced profiles.</p>
+                    </article>
+                    <article class="glass-card diff reveal">
+                        <div class="diff__num">03</div>
+                        <h3>Privacy artifact trail</h3>
+                        <p>Uploaded images are purged after the scan and a visible receipt confirms it. No identity claims, no hidden retention.</p>
+                    </article>
+                    <article class="glass-card diff reveal">
+                        <div class="diff__num">04</div>
+                        <h3>Watchlist &amp; rescans</h3>
+                        <p>Save a face, let WaitWHO recheck public sources on a schedule, and get notified when something new shows up.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             5 · CURIOSITY / EMOTIONAL
+        ====================================================== -->
+        <section class="section curiosity" aria-labelledby="curiosity-title">
+            <div class="container">
+                <header class="section__head section__head--center reveal">
+                    <span class="eyebrow">
+                        <span class="eyebrow__dot"></span>
+                        WHAT RESURFACES
+                    </span>
+                    <h2 id="curiosity-title" class="section__title">
+                        <span class="gradient-text">Some things don't stay buried online.</span>
+                    </h2>
+                    <p class="section__sub">
+                        Old profiles, reposts, archives, and public pages can resurface later. A single image can travel farther than expected.
+                    </p>
+                </header>
+
+                <ul class="pills" aria-hidden="true">
+                    <li class="pill pill--cyan" style="--d:0s">Social Media</li>
+                    <li class="pill pill--magenta" style="--d:.4s">Image Boards</li>
+                    <li class="pill pill--purple" style="--d:.8s">Public Profiles</li>
+                    <li class="pill pill--cyan" style="--d:1.2s">Archived Pages</li>
+                    <li class="pill pill--magenta" style="--d:1.6s">Random Websites</li>
+                    <li class="pill pill--purple" style="--d:2s">Forgotten Accounts</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             5B · USE-CASE VIGNETTES
+             Three deliberately generic scenarios. Kept short and
+             neutral so App Review can't read them as encouraging
+             surveillance, impersonation, or targeting specific groups.
+        ====================================================== -->
+        <section class="section" aria-labelledby="vignettes-title">
+            <div class="container">
+                <header class="section__head section__head--center reveal">
+                    <span class="eyebrow">
+                        <span class="eyebrow__dot"></span>
+                        WHEN PEOPLE USE IT
+                    </span>
+                    <h2 id="vignettes-title" class="section__title">
+                        <span class="gradient-text">A few of the moments it comes up.</span>
+                    </h2>
+                    <p class="section__sub">
+                        Short, common scenarios — not recommendations, just honest context for what kind of search this is.
+                    </p>
+                </header>
+
+                <div class="vignette-grid">
+                    <article class="glass-card vignette reveal">
+                        <div class="vignette__marker" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2Zm-12-6 2.5 3 3.5-4.5L20 17H4Z"/></svg>
+                        </div>
+                        <h3>Old photos you'd forgotten about</h3>
+                        <p>Modeling pictures, early social accounts, or portfolio reposts that kept traveling long after you stopped posting them.</p>
+                    </article>
+
+                    <article class="glass-card vignette reveal">
+                        <div class="vignette__marker" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 1 3 5v6c0 5.6 3.8 10.7 9 12 5.2-1.3 9-6.4 9-12V5l-9-4Zm0 11h7c-.5 4.1-3.4 7.8-7 8.9V12H5V6.3l7-3.1V12Z"/></svg>
+                        </div>
+                        <h3>A private account that surfaced</h3>
+                        <p>A profile you thought was locked down showing up in public results — often because of an older setting, reposted image, or reused handle.</p>
+                    </article>
+
+                    <article class="glass-card vignette reveal">
+                        <div class="vignette__marker" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M10 2h4l1 2h4a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h4l1-2Zm2 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg>
+                        </div>
+                        <h3>Checking before a job search</h3>
+                        <p>Reviewing what's visible about your face before interviews, publicity, or a move into a more public-facing role.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             6 · PREMIUM / MONITORING
+        ====================================================== -->
+        <section id="premium" class="section" aria-labelledby="premium-title">
+            <div class="container">
+                <header class="section__head reveal">
+                    <span class="eyebrow">
+                        <span class="eyebrow__dot"></span>
+                        PREMIUM
+                    </span>
+                    <h2 id="premium-title" class="section__title">
+                        <span class="gradient-text">The internet doesn't stand still.</span>
+                    </h2>
+                    <p class="section__sub">
+                        Premium members can run recurring rescans and receive alerts when new possible matches appear.
+                    </p>
+                </header>
+
+                <!-- Micro-pricing band. Starting prices only, to give
+                     a clear tradeoff signal without lying about absolute cost
+                     or making promises in-app pricing will contradict. -->
+                <div class="price-band reveal" aria-label="Starting prices">
+                    <div class="price-band__item">
+                        <span class="price-band__eyebrow">Premium</span>
+                        <span class="price-band__price">from $9.99<span class="price-band__unit">/week</span></span>
+                        <span class="price-band__note">Rescans, alerts &amp; included scans</span>
+                    </div>
+                    <div class="price-band__divider" aria-hidden="true"></div>
+                    <div class="price-band__item">
+                        <span class="price-band__eyebrow">Single scan</span>
+                        <span class="price-band__price">$4.99<span class="price-band__unit">/credit</span></span>
+                        <span class="price-band__note">No subscription required</span>
+                    </div>
+                    <div class="price-band__divider" aria-hidden="true"></div>
+                    <div class="price-band__item">
+                        <span class="price-band__eyebrow">Credit packs</span>
+                        <span class="price-band__price">as low as $2<span class="price-band__unit">/scan</span></span>
+                        <span class="price-band__note">Buy bulk, pay only for what you use</span>
+                    </div>
+                </div>
+
+                <div class="feature-grid">
+                    <article class="glass-card feature reveal">
+                        <div class="feature__icon feature__icon--cyan">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 6v6l4 2-1 1-5-3V6Zm0-4a10 10 0 1 0 10 10 10 10 0 0 0-10-10Zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z"/></svg>
+                        </div>
+                        <h3>Monthly rescans</h3>
+                        <p>Save a face and let WaitWHO recheck public sources on a schedule.</p>
+                    </article>
+                    <article class="glass-card feature reveal">
+                        <div class="feature__icon feature__icon--magenta">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7v5l-2 3v1h18v-1l-2-3V9a7 7 0 0 0-7-7Zm-2 19h4a2 2 0 0 1-4 0Z"/></svg>
+                        </div>
+                        <h3>New match alerts</h3>
+                        <p>Get notified when a new visually similar image appears in public sources.</p>
+                    </article>
+                    <article class="glass-card feature reveal">
+                        <div class="feature__icon feature__icon--purple">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13 3h-2v8H3v2h8v8h2v-8h8v-2h-8Z"/></svg>
+                        </div>
+                        <h3>More included scans</h3>
+                        <p>A higher weekly allotment for active investigations and re-checks.</p>
+                    </article>
+                    <article class="glass-card feature reveal">
+                        <div class="feature__icon feature__icon--cyan">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h16v2H4Zm0 4h10v2H4Zm0 4h16v2H4Zm0 4h10v2H4Z"/></svg>
+                        </div>
+                        <h3>Shareable result cards</h3>
+                        <p>Export a clean summary of what was found for your records.</p>
+                    </article>
+                </div>
+
+                <p class="small-print reveal">
+                    Starting prices shown in USD. Final pricing, allotments, and alert cadence are confirmed in-app at purchase and may change. À la carte credit packs and weekly subscriptions are both available.
+                </p>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             7 · PRIVACY / RESPONSIBLE USE
+        ====================================================== -->
+        <section id="privacy" class="section" aria-labelledby="privacy-title">
+            <div class="container">
+                <div class="privacy-layout">
+                    <div class="glass-card glass-card--wide reveal">
+                        <header class="section__head">
+                            <span class="eyebrow">
+                                <span class="eyebrow__dot"></span>
+                                PRIVACY
+                            </span>
+                            <h2 id="privacy-title" class="section__title">
+                                <span class="gradient-text">Built for responsible search.</span>
+                            </h2>
+                        </header>
+
+                        <ul class="bullets">
+                            <li><span class="bullets__mark"></span>Search public image sources only.</li>
+                            <li><span class="bullets__mark"></span>Uploaded images are used for search processing.</li>
+                            <li><span class="bullets__mark"></span>Do not upload images of minors.</li>
+                            <li><span class="bullets__mark"></span>Only search images you're authorized to use.</li>
+                            <li><span class="bullets__mark"></span>Results are based on visual similarity, not verified identity.</li>
+                        </ul>
+                        <p class="small-print privacy-layout__policy-link">
+                            <a href="privacy.html">Read the full Privacy Policy</a>
+                        </p>
+                    </div>
+
+                    <!-- Purge receipt artifact.
+                         Reads as proof-of-practice rather than a marketing claim.
+                         The values here are from an illustrative demo scan — the
+                         real app surfaces the actual image_purged_at timestamp for
+                         each user's scans. JS populates the relative timestamp
+                         so it always reads as "recently". -->
+                    <aside class="receipt reveal" aria-label="Demo scan purge receipt">
+                        <div class="receipt__top">
+                            <span class="receipt__dot receipt__dot--green" aria-hidden="true"></span>
+                            <span class="receipt__label">PURGE RECEIPT</span>
+                            <span class="receipt__id">#SCAN-DEMO-7F2A</span>
+                        </div>
+
+                        <div class="receipt__row">
+                            <span class="receipt__k">Status</span>
+                            <span class="receipt__v receipt__v--ok">Image purged</span>
+                        </div>
+                        <div class="receipt__row">
+                            <span class="receipt__k">Purged at</span>
+                            <span class="receipt__v" id="receipt-purged-at">—</span>
+                        </div>
+                        <div class="receipt__row">
+                            <span class="receipt__k">Retention</span>
+                            <span class="receipt__v">Deleted after scan completion</span>
+                        </div>
+                        <div class="receipt__row">
+                            <span class="receipt__k">ML training</span>
+                            <span class="receipt__v">Not used</span>
+                        </div>
+                        <div class="receipt__row">
+                            <span class="receipt__k">Verified by</span>
+                            <span class="receipt__v receipt__v--mono">waitwho.app/privacy.html</span>
+                        </div>
+
+                        <p class="receipt__foot">
+                            Every scan in the app shows its own purge timestamp.
+                            This is a demo receipt.
+                        </p>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             8 · GUIDES / PRIVACY CENTER
+        ====================================================== -->
+        <section id="guides" class="section" aria-labelledby="guides-title">
+            <div class="container">
+                <header class="section__head reveal">
+                    <span class="eyebrow">
+                        <span class="eyebrow__dot"></span>
+                        GUIDES
+                    </span>
+                    <h2 id="guides-title" class="section__title">
+                        <span class="gradient-text">Need help after a result?</span>
+                    </h2>
+                    <p class="section__sub">
+                        Curated, vetted walkthroughs for the most common next steps.
+                    </p>
+                </header>
+
+                <div class="guide-grid">
+                    <a class="glass-card guide reveal" href="guides/opt-out-google.html">
+                        <span class="guide__tag">SEARCH ENGINES</span>
+                        <h3>Remove images from Google &amp; Bing</h3>
+                        <p>Request removal from major search indexes, step by step.</p>
+                        <span class="guide__arrow" aria-hidden="true">→</span>
+                    </a>
+                    <a class="glass-card guide reveal" href="guides/opt-out-pimeyes.html">
+                        <span class="guide__tag">OPT-OUTS</span>
+                        <h3>Face-index opt-out guides</h3>
+                        <p>Public removal forms for the major face-index services.</p>
+                        <span class="guide__arrow" aria-hidden="true">→</span>
+                    </a>
+                    <a class="glass-card guide reveal" href="guides/private-profile-leaked.html">
+                        <span class="guide__tag">SOCIAL</span>
+                        <h3>A private profile appeared</h3>
+                        <p>What to do when an account you thought was private shows up.</p>
+                        <span class="guide__arrow" aria-hidden="true">→</span>
+                    </a>
+                    <a class="glass-card guide reveal" href="guides/leak-site-basics.html">
+                        <span class="guide__tag">LEAKS</span>
+                        <h3>Leak or scraper site first steps</h3>
+                        <p>Documenting, reporting, and protecting yourself — without the panic.</p>
+                        <span class="guide__arrow" aria-hidden="true">→</span>
+                    </a>
+                </div>
+
+                <div class="section__cta reveal">
+                    <a class="btn btn--ghost" href="guides/">Explore all guides</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             9 · FAQ
+        ====================================================== -->
+        <section id="faq" class="section" aria-labelledby="faq-title">
+            <div class="container">
+                <header class="section__head section__head--center reveal">
+                    <span class="eyebrow">
+                        <span class="eyebrow__dot"></span>
+                        FREQUENTLY ASKED
+                    </span>
+                    <h2 id="faq-title" class="section__title">
+                        <span class="gradient-text">Answers before you ask.</span>
+                    </h2>
+                    <p class="section__sub">
+                        The twelve most common questions about how WaitWHO works, what it doesn't do, and what happens to your photo.
+                    </p>
+                </header>
+
+                <div class="faq-grid">
+                    <details class="faq-item reveal">
+                        <summary>
+                            <span class="faq-item__q">What is WaitWHO?</span>
+                            <span class="faq-item__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-item__a">
+                            <p>WaitWHO is a face-search app. Upload a photo and we search publicly available images across the web for visually similar matches, so you can review what may be publicly visible.</p>
+                        </div>
+                    </details>
+
+                    <details class="faq-item reveal">
+                        <summary>
+                            <span class="faq-item__q">Is WaitWHO available on iPhone?</span>
+                            <span class="faq-item__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-item__a">
+                            <p>Yes — WaitWHO is currently iPhone-only. Android support is planned for Summer 2026.</p>
+                        </div>
+                    </details>
+
+                    <details class="faq-item reveal">
+                        <summary>
+                            <span class="faq-item__q">What kind of websites are searched?</span>
+                            <span class="faq-item__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-item__a">
+                            <p>Results may include publicly available pages such as social profiles, articles, image platforms, forums, archived pages, and other indexed public sources.</p>
+                        </div>
+                    </details>
+
+                    <details class="faq-item reveal">
+                        <summary>
+                            <span class="faq-item__q">Is WaitWHO searching private accounts?</span>
+                            <span class="faq-item__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-item__a">
+                            <p>No. WaitWHO only searches publicly available sources. Private accounts, locked content, and anything behind a login are not searched.</p>
+                        </div>
+                    </details>
+
+                    <details class="faq-item reveal">
+                        <summary>
+                            <span class="faq-item__q">What happens to my photo after the scan?</span>
+                            <span class="faq-item__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-item__a">
+                            <p>Your uploaded image is used to run the search and isn't kept long-term. Once the scan completes, the image is purged from our systems. We never sell photos, add them to a public index, or use them to train models.</p>
+                        </div>
+                    </details>
+
+                    <details class="faq-item reveal">
+                        <summary>
+                            <span class="faq-item__q">Does WaitWHO remove content for me?</span>
+                            <span class="faq-item__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-item__a">
+                            <p>No. WaitWHO is a search and awareness tool — it doesn't file takedowns or remove content on your behalf. The in-app guides walk you through the options available directly from the hosting platform.</p>
+                        </div>
+                    </details>
+
+                    <details class="faq-item reveal">
+                        <summary>
+                            <span class="faq-item__q">Why should I try multiple photos?</span>
+                            <span class="faq-item__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-item__a">
+                            <p>Different photos can produce different results. Lighting, age, hairstyle, angle, glasses, and how much of the face is visible all affect similarity matching.</p>
+                        </div>
+                    </details>
+
+                    <details class="faq-item reveal">
+                        <summary>
+                            <span class="faq-item__q">How do I find old photos of myself online?</span>
+                            <span class="faq-item__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-item__a">
+                            <p>Try both recent and older photos in WaitWHO and compare the results. Older photos can surface archived pages that newer ones miss, and vice versa.</p>
+                        </div>
+                    </details>
+
+                    <details class="faq-item reveal">
+                        <summary>
+                            <span class="faq-item__q">Why did my results change later?</span>
+                            <span class="faq-item__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-item__a">
+                            <p>The web changes constantly. New pages get indexed, old pages disappear, and the public sources we search update over time — so the same photo can return different matches on different days.</p>
+                        </div>
+                    </details>
+
+                    <details class="faq-item reveal">
+                        <summary>
+                            <span class="faq-item__q">What does Premium include?</span>
+                            <span class="faq-item__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-item__a">
+                            <p>Premium plans may include recurring rescans, alerts when new possible matches are detected, additional included searches, and expanded monitoring tools.</p>
+                        </div>
+                    </details>
+
+                    <details class="faq-item reveal">
+                        <summary>
+                            <span class="faq-item__q">Will I get alerts if something new appears?</span>
+                            <span class="faq-item__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-item__a">
+                            <p>Premium users may receive notifications when new possible matches are detected during scheduled rescans.</p>
+                        </div>
+                    </details>
+
+                    <details class="faq-item reveal">
+                        <summary>
+                            <span class="faq-item__q">What if I find a photo I don't want online?</span>
+                            <span class="faq-item__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-item__a">
+                            <p>WaitWHO includes guides covering common removal requests, reporting steps, and opt-out forms for major search indexes and face-search services.</p>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             10 · FINAL CTA
+        ====================================================== -->
+        <section id="download" class="finale" aria-labelledby="finale-title">
+            <div class="container finale__inner reveal">
+                <div class="finale__ring" aria-hidden="true"></div>
+                <h2 id="finale-title" class="finale__title">
+                    <span class="gradient-text">Try your face next.</span>
+                </h2>
+                <p class="finale__sub">
+                    See what possible public image matches may be out there.
+                </p>
+                <div class="finale__download">
+                    <a class="app-store-badge app-store-badge--xl"
+                       href="#download"
+                       data-app-store
+                       aria-label="Download WaitWHO on the App Store"
+                       data-event="download_finale">
+                        <svg viewBox="0 0 135 40" role="img" aria-hidden="true" focusable="false">
+                            <use href="#app-store-badge-art"></use>
+                        </svg>
+                    </a>
+
+                    <!-- Desktop-only QR placeholder.
+                         The actual dot-matrix art is drawn client-side by script.js
+                         so we don't ship a giant handcoded <svg> here. Swap this
+                         div for a real QR (generated from the App Store URL) once
+                         the listing is live — a simple <img src="qr.svg"> works. -->
+                    <div class="qr" aria-hidden="true">
+                        <div class="qr__art" id="qr-art"></div>
+                        <div class="qr__label">
+                            <span class="qr__label-top">SCAN TO DOWNLOAD</span>
+                            <span class="qr__label-sub">Coming soon to the App Store</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="small-print">Available on iOS. Android evaluation in progress.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+    <footer class="footer" role="contentinfo">
+        <div class="container footer__inner">
+            <div class="footer__brand">
+                <img class="brand-logo brand-logo--lg" src="assets/waitwho-logo.png" alt="WaitWHO" />
+                <p class="footer__tagline">Search public images for visually similar matches.</p>
+            </div>
+
+            <nav class="footer__links" aria-label="Footer">
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms</a>
+                <a href="contact.html">Contact</a>
+                <a href="#privacy">Responsible Use</a>
+            </nav>
+
+            <p class="footer__disclaimer">
+                WaitWHO is not affiliated with Facecheck.id, PimEyes, Lenso.ai, Google, Bing, Yandex, or any third-party search provider unless explicitly stated. Results reflect visual similarity against public image sources and are not identity confirmation.
+            </p>
+
+            <p class="footer__copy">© <span id="year"></span> WaitWHO. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js?v=7" defer></script>
+</body>
+</html>
