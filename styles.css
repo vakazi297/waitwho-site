@@ -1244,6 +1244,9 @@ body.menu-open { overflow: hidden; }
     height: auto;
     object-fit: contain;
 }
+.steps .step:nth-child(3) .step__icon--wide {
+    padding-top: 8px;
+}
 .step h3 {
     font-family: var(--font-display);
     font-size: 20px;
