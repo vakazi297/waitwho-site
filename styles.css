@@ -1551,10 +1551,12 @@ body.menu-open { overflow: hidden; }
 }
 .vignette__marker svg { width: 20px; height: 20px; }
 .vignette__marker--wide {
-    width: 135px;
+    /* Larger than the “How it works” step icons; slot height follows width
+       via aspect-ratio so titles stay aligned across the three cards. */
+    width: min(200px, 100%);
     max-width: 100%;
     /* Slot matches tallest art (moment2 722×632); height tracks width when
-       the column narrows below 135px. Shorter images align to the bottom. */
+       the column is narrow. Shorter images align to the bottom. */
     aspect-ratio: 722 / 632;
     flex-shrink: 0;
     padding: 0;
