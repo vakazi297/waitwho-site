@@ -399,6 +399,38 @@
         requestAnimationFrame(step);
     })();
 
+    // ---- Back to top ---------------------------------------------------
+    // Floating button that fades in after the hero is scrolled past, and
+    // scrolls the page back to the top when clicked.
+    (function setupBackToTop() {
+        const btn = document.getElementById('back-to-top');
+        if (!btn) return;
+
+        btn.hidden = false;
+
+        const SHOW_AFTER = 400;
+        let ticking = false;
+
+        function update() {
+            ticking = false;
+            const y = window.scrollY || document.documentElement.scrollTop || 0;
+            btn.classList.toggle('is-visible', y > SHOW_AFTER);
+        }
+
+        window.addEventListener('scroll', () => {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(update);
+        }, { passive: true });
+
+        btn.addEventListener('click', () => {
+            const behavior = prefersReducedMotion ? 'auto' : 'smooth';
+            window.scrollTo({ top: 0, behavior });
+        });
+
+        update();
+    })();
+
     // ---- In-page anchor links ------------------------------------------
     // `scroll-behavior: smooth` on <html> can make wheel / trackpad scroll
     // feel heavy on some setups. We keep `html` at `auto` and only smooth
