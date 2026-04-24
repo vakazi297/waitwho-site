@@ -468,6 +468,30 @@
         const panel = menu.querySelector('.mobile-menu__panel');
         const linkEls = menu.querySelectorAll('a, button');
         let lastFocus = null;
+        let lockedScrollY = 0;
+
+        /* iOS Safari ignores `overflow: hidden` on <body> for touch
+         * scrolls, so we pin the page with `position: fixed` while the
+         * drawer is open and restore the scroll offset on close. */
+        function lockBodyScroll() {
+            lockedScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+            const body = document.body;
+            body.style.position = 'fixed';
+            body.style.top = '-' + lockedScrollY + 'px';
+            body.style.left = '0';
+            body.style.right = '0';
+            body.style.width = '100%';
+        }
+
+        function unlockBodyScroll() {
+            const body = document.body;
+            body.style.position = '';
+            body.style.top = '';
+            body.style.left = '';
+            body.style.right = '';
+            body.style.width = '';
+            window.scrollTo(0, lockedScrollY);
+        }
 
         /* iOS Safari ghost-click guard.
          * On a tap, iOS fires: touchstart → touchend → (synthesized) click ~now.
@@ -483,6 +507,7 @@
         function open() {
             menuOpenedAt = Date.now();
             lastFocus = document.activeElement;
+            lockBodyScroll();
             menu.classList.add('is-open');
             menu.setAttribute('aria-hidden', 'false');
             toggle.setAttribute('aria-expanded', 'true');
@@ -501,6 +526,7 @@
             toggle.setAttribute('aria-expanded', 'false');
             toggle.setAttribute('aria-label', 'Open menu');
             document.body.classList.remove('menu-open');
+            unlockBodyScroll();
             if (lastFocus && typeof lastFocus.focus === 'function') {
                 lastFocus.focus({ preventScroll: true });
             }
