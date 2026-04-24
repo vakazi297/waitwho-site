@@ -464,7 +464,26 @@
             else open();
         }
 
-        toggle.addEventListener('click', toggleMenu);
+        /* iOS Safari: rely on touchend for the toggle; synthetic click follows
+         * ~300ms later and would double-toggle (open then instantly close).
+         * Desktop / trackpad: click only. */
+        let lastTouchDrivenToggle = 0;
+        toggle.addEventListener(
+            'touchend',
+            () => {
+                lastTouchDrivenToggle = Date.now();
+                toggleMenu();
+            },
+            { passive: true }
+        );
+        toggle.addEventListener('click', (e) => {
+            if (Date.now() - lastTouchDrivenToggle < 500) {
+                e.preventDefault();
+                e.stopPropagation();
+                return;
+            }
+            toggleMenu();
+        });
         backdrop && backdrop.addEventListener('click', close);
 
         // Any link or element marked with data-close-menu inside the drawer

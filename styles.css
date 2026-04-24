@@ -79,8 +79,8 @@ body {
     overflow-x: hidden;
     max-width: 100%;
     overscroll-behavior-x: none;
-    /* Prefer vertical panning so fast scrolls don’t translate into sideways page drift. */
-    touch-action: pan-y pinch-zoom;
+    /* Do NOT set touch-action here — `pan-y` on body breaks iOS Safari taps
+       on the sticky nav hamburger (clicks never reach the <button>). */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -360,6 +360,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
     backdrop-filter: blur(16px) saturate(130%);
     -webkit-backdrop-filter: blur(16px) saturate(130%);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    /* Ensure taps aren’t lost to siblings / compositor quirks on iOS. */
+    pointer-events: auto;
 }
 .nav__brand {
     display: inline-flex;
@@ -492,6 +494,9 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
     border-radius: 10px;
     cursor: pointer;
     position: relative;
+    z-index: 2;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 229, 255, 0.15);
     transition: background .25s var(--ease-out), border-color .25s var(--ease-out);
 }
 .nav__hamburger:hover {
