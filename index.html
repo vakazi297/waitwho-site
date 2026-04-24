@@ -182,17 +182,21 @@
          Backdrop is placed before the panel so the panel paints above it
          without needing explicit z-index overrides. -->
     <aside id="mobile-menu" class="mobile-menu" aria-hidden="true" aria-label="Mobile menu">
-        <div class="mobile-menu__backdrop" data-close-menu></div>
-        <div class="mobile-menu__panel">
-            <nav class="mobile-menu__links" aria-label="Mobile primary">
-                <a href="#how">How it works</a>
-                <a href="#results">Results</a>
-                <a href="#different">Why us</a>
-                <a href="#premium">Premium</a>
-                <a href="#privacy">Privacy</a>
-                <a href="#guides">Guides</a>
-                <a href="#faq">FAQ</a>
-            </nav>
+    <div class="mobile-menu__backdrop" data-close-menu></div>
+    <div class="mobile-menu__panel">
+        <button class="mobile-menu__close" type="button" data-close-menu aria-label="Close menu">
+            ×
+        </button>
+
+        <nav class="mobile-menu__links" aria-label="Mobile primary">
+            <a href="#how">How it works</a>
+            <a href="#results">Results</a>
+            <a href="#different">Why us</a>
+            <a href="#premium">Premium</a>
+            <a href="#privacy">Privacy</a>
+            <a href="#guides">Guides</a>
+            <a href="#faq">FAQ</a>
+        </nav>
             <div class="mobile-menu__cta">
                 <a class="app-store-badge" href="#download" data-app-store aria-label="Download WaitWHO on the App Store" data-event="download_mobile">
                     <svg viewBox="0 0 135 40" role="img" aria-hidden="true" focusable="false">
