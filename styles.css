@@ -62,13 +62,12 @@ html {
        on some browsers where `smooth` on the root feels laggy. */
     scroll-behavior: auto;
     -webkit-text-size-adjust: 100%;
-    /* iOS Safari: pair with body — one alone often still allows horizontal “knock”. */
-    overflow-x: hidden;
+    /* `clip` instead of `hidden` — `overflow-x: hidden` silently promotes
+       overflow-y to `auto`, which makes this element a scroll container
+       (that's what caused the "scrollbar inside a scrollbar" + bouncing). */
+    overflow-x: clip;
     max-width: 100%;
     overscroll-behavior-x: none;
-    /* Keeps layout width stable when the vertical scrollbar appears/disappears
-       (stops the “scrollbar bouncing” jiggle from width reflow). */
-    scrollbar-gutter: stable;
 }
 
 body {
@@ -81,7 +80,7 @@ body {
     /* Match hero (100svh): 100dvh can change when browser chrome moves,
        which retriggers layout and makes the scrollbar track “breathe”. */
     min-height: 100svh;
-    overflow-x: hidden;
+    overflow-x: clip;
     max-width: 100%;
     overscroll-behavior-x: none;
     /* Do NOT set touch-action here — `pan-y` on body breaks iOS Safari taps
@@ -92,7 +91,7 @@ body {
 
 /* Contain wide paint (blurs, halos, terminal lines) so they can’t widen the scroll tile. */
 main {
-    overflow-x: hidden;
+    overflow-x: clip;
     max-width: 100%;
 }
 
@@ -675,7 +674,9 @@ body.menu-open { overflow: hidden; }
     display: flex;
     align-items: center;
     isolation: isolate;
-    overflow-x: hidden;
+    /* `clip` (not `hidden`) — otherwise the browser promotes overflow-y
+       to `auto` and gives the hero its own scrollbar. */
+    overflow-x: clip;
 }
 
 /* Full-bleed “hacker terminal” whispers — same vibe as iOS ScanLoaderView.
