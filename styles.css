@@ -66,6 +66,9 @@ html {
     overflow-x: hidden;
     max-width: 100%;
     overscroll-behavior-x: none;
+    /* Keeps layout width stable when the vertical scrollbar appears/disappears
+       (stops the “scrollbar bouncing” jiggle from width reflow). */
+    scrollbar-gutter: stable;
 }
 
 body {
@@ -75,7 +78,9 @@ body {
     line-height: 1.55;
     color: var(--text-primary);
     background: var(--bg-0);
-    min-height: 100dvh;
+    /* Match hero (100svh): 100dvh can change when browser chrome moves,
+       which retriggers layout and makes the scrollbar track “breathe”. */
+    min-height: 100svh;
     overflow-x: hidden;
     max-width: 100%;
     overscroll-behavior-x: none;
@@ -1023,34 +1028,6 @@ body.menu-open { overflow: hidden; }
     box-shadow: 0 8px 24px -6px rgba(0, 229, 255, .5), 0 8px 24px -6px rgba(255, 0, 255, .4);
 }
 
-/* Scroll cue */
-.hero__scroll {
-    position: absolute;
-    z-index: 2;
-    left: 50%;
-    bottom: 18px;
-    transform: translateX(-50%);
-    width: 24px;
-    height: 36px;
-    border-radius: 999px;
-    border: 1px solid var(--glass-border);
-    background: rgba(255, 255, 255, .03);
-    display: flex;
-    justify-content: center;
-    padding-top: 6px;
-}
-.hero__scroll span {
-    width: 2px; height: 8px;
-    background: var(--neon-cyan);
-    border-radius: 2px;
-    animation: scroll-cue 1.6s var(--ease-in-out) infinite;
-}
-@keyframes scroll-cue {
-    0%   { transform: translateY(0);  opacity: 1; }
-    80%  { transform: translateY(14px); opacity: 0; }
-    100% { transform: translateY(14px); opacity: 0; }
-}
-
 @media (max-width: 900px) {
     .hero { padding-top: 40px; min-height: auto; }
     .hero__inner {
@@ -1061,7 +1038,6 @@ body.menu-open { overflow: hidden; }
     .hero__ctas { justify-content: center; }
     .hero__typed { align-self: center; }
     .hero__device { order: -1; width: min(260px, 70vw); }
-    .hero__scroll { display: none; }
     /* Tighter halo bleed on narrow viewports — huge negative inset + blur
        can inflate scrollable width on WebKit when paired with fast scroll. */
     .hero-device-aura { inset: -14%; }
