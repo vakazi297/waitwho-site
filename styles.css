@@ -2494,3 +2494,17 @@ body.menu-open { overflow: hidden; }
     justify-content: center;
     padding-top: 30px;
 }
+
+.step__icon--image {
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.step__icon--image img {
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+    display: block;
+}
