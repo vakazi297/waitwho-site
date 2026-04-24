@@ -1222,7 +1222,7 @@ body.menu-open { overflow: hidden; }
     display: block;
 }
 .step__icon--wide {
-    width: 175px;
+    width: 135px;
     max-width: 100%;
     height: auto;
     min-height: 0;
