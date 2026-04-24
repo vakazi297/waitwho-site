@@ -103,26 +103,47 @@
         ];
 
         function maxConcurrent() {
-            return window.innerWidth < 640 ? 3 : 5;
+            const w = window.innerWidth;
+            if (w <= 900) return 2;
+            return w < 640 ? 3 : 5;
         }
 
         let active = 0;
+
+        /** Below ~900px the hero stacks (phone first, copy under). Cap Y so
+         *  whispers never land behind the subhead/CTAs — i.e. not past the phone. */
+        function whisperMaxY01() {
+            const w = window.innerWidth;
+            if (w > 900) return 0.88;
+            const hero = host.closest('.hero');
+            if (!hero) return 0.38;
+            const device = hero.querySelector('.hero__device');
+            const hr = hero.getBoundingClientRect();
+            if (!device || hr.height < 40) return 0.38;
+            const dr = device.getBoundingClientRect();
+            const padPx = 14;
+            const frac = (dr.bottom - hr.top + padPx) / hr.height;
+            return Math.min(0.52, Math.max(0.2, frac));
+        }
 
         function samplePosition() {
             const w = window.innerWidth;
             const wide = w >= 900;
             const mid = w >= 640 && w < 900;
-            const stacked = w < 910;
-            for (let attempt = 0; attempt < 14; attempt++) {
+            /* Only (900, 910): two-col is gone but w still triggers old "stacked" — keep center-top reject. */
+            const stackedNarrowTablet = w > 900 && w < 910;
+            const yHi = whisperMaxY01();
+
+            for (let attempt = 0; attempt < 22; attempt++) {
                 const x = 0.04 + Math.random() * 0.92;
-                const y = 0.06 + Math.random() * 0.88;
+                const y = 0.06 + Math.random() * (yHi - 0.06);
                 if (wide && x < 0.54 && y > 0.16 && y < 0.72) continue;
                 if (mid && x < 0.62 && y > 0.12 && y < 0.55) continue;
-                /* Stacked hero: title + CTAs sit in upper band — keep whispers lower / edges */
-                if (stacked && y < 0.44 && x > 0.1 && x < 0.9) continue;
+                if (stackedNarrowTablet && y < 0.44 && x > 0.1 && x < 0.9) continue;
+                if (y > yHi) continue;
                 return { x, y };
             }
-            return { x: 0.82, y: 0.72 };
+            return { x: 0.1 + Math.random() * 0.25, y: Math.min(0.28, yHi * 0.75) };
         }
 
         function fadeOutRemove(el) {

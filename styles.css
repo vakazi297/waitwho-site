@@ -62,6 +62,10 @@ html {
        on some browsers where `smooth` on the root feels laggy. */
     scroll-behavior: auto;
     -webkit-text-size-adjust: 100%;
+    /* iOS Safari: pair with body — one alone often still allows horizontal “knock”. */
+    overflow-x: hidden;
+    max-width: 100%;
+    overscroll-behavior-x: none;
 }
 
 body {
@@ -73,8 +77,18 @@ body {
     background: var(--bg-0);
     min-height: 100dvh;
     overflow-x: hidden;
+    max-width: 100%;
+    overscroll-behavior-x: none;
+    /* Prefer vertical panning so fast scrolls don’t translate into sideways page drift. */
+    touch-action: pan-y pinch-zoom;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+/* Contain wide paint (blurs, halos, terminal lines) so they can’t widen the scroll tile. */
+main {
+    overflow-x: hidden;
+    max-width: 100%;
 }
 
 img, svg, video { display: block; max-width: 100%; }
@@ -517,13 +531,18 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
    inert on desktop (display:none below); on mobile it slides in
    from the right when JS sets .is-open on <body>.
 ------------------------------------------------------------- */
+/* Closed: sit *below* .nav (z-index 40) so the hamburger stays clickable.
+   Safari/WebKit often eats taps on fixed full-viewport layers even with
+   pointer-events:none + visibility:hidden. Open state bumps above nav. */
 .mobile-menu {
     position: fixed;
     inset: 0;
-    z-index: 50;
+    z-index: 30;
     pointer-events: none;
     visibility: hidden;
     transition: visibility 0s linear .35s;
+    /* Drawer panel uses translateX; keep it from widening document scroll width on iOS. */
+    overflow-x: hidden;
 }
 .mobile-menu__backdrop {
     position: absolute;
@@ -556,6 +575,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
     overflow-y: auto;
 }
 .mobile-menu.is-open {
+    z-index: 60;
     visibility: visible;
     pointer-events: auto;
     transition-delay: 0s;
@@ -626,6 +646,7 @@ body.menu-open { overflow: hidden; }
     display: flex;
     align-items: center;
     isolation: isolate;
+    overflow-x: hidden;
 }
 
 /* Full-bleed “hacker terminal” whispers — same vibe as iOS ScanLoaderView.
@@ -1017,6 +1038,9 @@ body.menu-open { overflow: hidden; }
     .hero__typed { align-self: center; }
     .hero__device { order: -1; width: min(260px, 70vw); }
     .hero__scroll { display: none; }
+    /* Tighter halo bleed on narrow viewports — huge negative inset + blur
+       can inflate scrollable width on WebKit when paired with fast scroll. */
+    .hero-device-aura { inset: -14%; }
 }
 
 /* -------------------------------------------------------------
