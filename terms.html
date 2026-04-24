@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" />
 
-    <link rel="stylesheet" href="styles.css?v=21" />
+    <link rel="stylesheet" href="styles.css?v=24" />
 </head>
 <body>
     <div class="bg-layer bg-grid" aria-hidden="true"></div>
@@ -398,10 +398,46 @@
         </div>
     </footer>
 
+    <button type="button"
+            id="back-to-top"
+            class="back-to-top"
+            aria-label="Back to top"
+            hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M12 19V6M6 12l6-6 6 6"/>
+        </svg>
+    </button>
+
     <script>
         (function () {
             var y = document.getElementById('year');
             if (y) y.textContent = String(new Date().getFullYear());
+
+            var btn = document.getElementById('back-to-top');
+            if (!btn) return;
+            btn.hidden = false;
+
+            var SHOW_AFTER = 400;
+            var ticking = false;
+            var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            function update() {
+                ticking = false;
+                var sy = window.scrollY || document.documentElement.scrollTop || 0;
+                btn.classList.toggle('is-visible', sy > SHOW_AFTER);
+            }
+
+            window.addEventListener('scroll', function () {
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(update);
+            }, { passive: true });
+
+            btn.addEventListener('click', function () {
+                window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+            });
+
+            update();
         })();
     </script>
 </body>
