@@ -2503,8 +2503,8 @@ body.menu-open { overflow: hidden; }
 }
 
 .step__icon--image img {
-    width: 54px;
-    height: 54px;
+    width: 200px;
+    height: 157px;
     object-fit: contain;
     display: block;
 }
