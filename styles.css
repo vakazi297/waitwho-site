@@ -113,6 +113,25 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
     padding-right: var(--gutter);
 }
 
+.mobile-menu__close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.06);
+    color: #fff;
+    font-size: 30px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.mobile-menu__close:hover {
+    background: rgba(255,255,255,.12);
+}
+
 /* -------------------------------------------------------------
    BACKGROUND LAYERS
 ------------------------------------------------------------- */
