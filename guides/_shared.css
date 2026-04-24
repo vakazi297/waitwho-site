@@ -294,3 +294,51 @@
     color: var(--text-tertiary);
     letter-spacing: .15em;
 }
+
+/* -------------------------------------------------------------
+   Guides footer — three columns (brand | Company | Product)
+   Uses `display: contents` on `.footer__cols` so the two link groups
+   become direct grid items next to `.footer__brand`.
+------------------------------------------------------------- */
+.footer__inner:has(.footer__cols) {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: 28px 36px;
+    align-items: start;
+}
+.footer__inner:has(.footer__cols) .footer__cols {
+    display: contents;
+}
+.footer__inner:has(.footer__cols) .footer__cols > div {
+    min-width: 0;
+}
+.footer__inner:has(.footer__cols) .footer__cols h4 {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin: 0 0 12px;
+}
+.footer__inner:has(.footer__cols) .footer__cols ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.footer__inner:has(.footer__cols) .footer__cols a {
+    font-size: 14px;
+    color: var(--neon-cyan);
+}
+.footer__inner:has(.footer__cols) .footer__cols a:hover {
+    color: #7FF1FF;
+}
+
+@media (max-width: 720px) {
+    .footer__inner:has(.footer__cols) {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
