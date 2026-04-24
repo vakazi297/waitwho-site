@@ -300,11 +300,15 @@
         let scrollIdleTimer = null;
 
         function resize() {
-            width = canvas.clientWidth = window.innerWidth;
-            height = canvas.clientHeight = window.innerHeight;
-            canvas.width = Math.floor(width * DPR);
-            canvas.height = Math.floor(height * DPR);
-            ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    width = window.innerWidth;
+    height = window.innerHeight;
+
+    canvas.width = Math.floor(width * DPR);
+    canvas.height = Math.floor(height * DPR);
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 
             const isNarrow = width < 768;
             const maxCap = isNarrow ? 42 : config.maxParticles;
