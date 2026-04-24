@@ -1452,6 +1452,12 @@ body.menu-open { overflow: hidden; }
     color: #fff;
 }
 .feature__icon svg { width: 22px; height: 22px; }
+.feature__icon img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    display: block;
+}
 .feature__icon--cyan    { background: linear-gradient(135deg, rgba(0, 229, 255, .25), rgba(0, 229, 255, .05)); border: 1px solid rgba(0, 229, 255, .35); box-shadow: 0 0 18px -6px rgba(0, 229, 255, .55); color: var(--neon-cyan); }
 .feature__icon--magenta { background: linear-gradient(135deg, rgba(255, 0, 255, .25), rgba(255, 0, 255, .05)); border: 1px solid rgba(255, 0, 255, .35); box-shadow: 0 0 18px -6px rgba(255, 0, 255, .55); color: var(--neon-magenta); }
 .feature__icon--purple  { background: linear-gradient(135deg, rgba(119, 57, 177, .35), rgba(119, 57, 177, .05)); border: 1px solid rgba(119, 57, 177, .45); box-shadow: 0 0 18px -6px rgba(119, 57, 177, .55); color: #B78CFA; }
