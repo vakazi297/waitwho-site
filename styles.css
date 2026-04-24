@@ -48,6 +48,10 @@
     --container: 1180px;
     --gutter: clamp(18px, 4vw, 40px);
     --section-pad: clamp(72px, 10vw, 140px);
+
+    /* PNG “wide” icons — “How it works” + vignettes share this so they render
+       at the same pixel width (no extra aspect-ratio slot shrinking art). */
+    --wide-art-width: min(200px, 100%);
 }
 
 /* -------------------------------------------------------------
@@ -1207,7 +1211,7 @@ body.menu-open { overflow: hidden; }
     display: block;
 }
 .step__icon--wide {
-    width: 135px;
+    width: var(--wide-art-width);
     max-width: 100%;
     height: auto;
     min-height: 0;
@@ -1551,31 +1555,29 @@ body.menu-open { overflow: hidden; }
 }
 .vignette__marker svg { width: 20px; height: 20px; }
 .vignette__marker--wide {
-    /* Larger than the “How it works” step icons; slot height follows width
-       via aspect-ratio so titles stay aligned across the three cards. */
-    width: min(200px, 100%);
+    /* Match `.step__icon--wide`: same width token + natural image height.
+       (A fixed aspect-ratio + max-height was letterboxing shorter/wider art
+       so it looked smaller than the “How it works” PNGs.) */
+    width: var(--wide-art-width);
     max-width: 100%;
-    /* Slot matches tallest art (moment2 722×632); height tracks width when
-       the column is narrow. Shorter images align to the bottom. */
-    aspect-ratio: 722 / 632;
-    flex-shrink: 0;
+    height: auto;
+    min-height: 0;
+    margin-inline: auto;
+    /* .vignette uses gap:12px; +6px here ≈ step icon 18px below art */
+    margin-bottom: 6px;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
+    display: block;
     border: none;
     background: none;
     box-shadow: none;
     border-radius: 0;
 }
 .vignette__marker--wide img {
+    max-width: none;
+    max-height: none;
     width: 100%;
-    max-width: 100%;
-    max-height: 100%;
     height: auto;
     object-fit: contain;
-    object-position: bottom center;
     display: block;
 }
 .vignette h3 { font-family: var(--font-display); margin: 0; font-size: 18px; line-height: 1.25; }
