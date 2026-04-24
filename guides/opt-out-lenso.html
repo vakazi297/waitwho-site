@@ -28,6 +28,29 @@
     <link rel="stylesheet" href="_shared.css?v=4" />
 </head>
 <body>
+    <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+        <defs>
+            <symbol id="app-store-badge-art" viewBox="0 0 135 40">
+                <rect x="0.5" y="0.5" width="134" height="39" rx="6" fill="#000" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+                <g transform="translate(10, 8) scale(0.85)" fill="#fff">
+                    <path d="M15.769.442c.021 0 .041 0 .063 0 .152 1.887-.569 3.297-1.447 4.319-.861 1.015-2.041 1.998-3.947 1.849-.127-1.859.596-3.164 1.474-4.184.814-.951 2.305-1.796 3.857-1.984zm5.058 16.694c0 .019 0 .036 0 .054-.47 1.424-1.14 2.644-1.957 3.776-.747 1.028-1.662 2.412-3.296 2.412-1.412 0-2.35-.908-3.797-.933-1.531-.025-2.373.759-3.773.957-.16 0-.32 0-.477 0-1.028-.149-1.857-.962-2.461-1.695-1.782-2.168-3.158-4.967-3.414-8.551 0-.351 0-.701 0-1.051.109-2.566 1.355-4.652 3.011-5.663.874-.536 2.075-.993 3.412-.789.573.089 1.159.285 1.673.48.486.187 1.093.519 1.669.501.39-.011.779-.214 1.172-.358 1.154-.417 2.285-.894 3.775-.67 1.791.271 3.063 1.067 3.849 2.295-1.515.965-2.714 2.42-2.509 4.909.181 2.263 1.497 3.586 3.123 4.326z"/>
+                </g>
+                <text x="34" y="17"
+                      fill="#fff"
+                      font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+                      font-size="7.5"
+                      font-weight="400"
+                      letter-spacing="0.15">Download on the</text>
+                <text x="34" y="32"
+                      fill="#fff"
+                      font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif"
+                      font-size="16"
+                      font-weight="600"
+                      letter-spacing="-0.3">App Store</text>
+            </symbol>
+        </defs>
+    </svg>
+
     <div class="bg-layer bg-grid" aria-hidden="true"></div>
     <div class="bg-layer bg-glow" aria-hidden="true"></div>
 
@@ -43,7 +66,15 @@
             <a href="./">Guides</a>
             <a href="../index.html#faq">FAQ</a>
         </nav>
-        <a class="btn btn--ghost nav__cta" href="../index.html#download">Get the App</a>
+        <a class="app-store-badge app-store-badge--sm nav__cta"
+           href="../index.html#download"
+           data-app-store
+           aria-label="Download WaitWHO on the App Store"
+           data-event="download_nav">
+            <svg viewBox="0 0 135 40" role="img" aria-hidden="true" focusable="false">
+                <use href="#app-store-badge-art"></use>
+            </svg>
+        </a>
     </header>
 
     <main class="guide-page">
