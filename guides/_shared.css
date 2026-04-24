@@ -297,21 +297,19 @@
 
 /* -------------------------------------------------------------
    Guides footer — three columns (brand | Company | Product)
-   Uses `display: contents` on `.footer__cols` so the two link groups
-   become direct grid items next to `.footer__brand`.
+   Markup: `.footer__inner.footer__inner--guides` with `.footer__brand`
+   + two `.footer__col` siblings (no wrapper). Overrides the global
+   two-column `.footer__inner` from styles.css.
 ------------------------------------------------------------- */
-.footer__inner:has(.footer__cols) {
+.footer__inner.footer__inner--guides {
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1fr);
     gap: 28px 36px;
     align-items: start;
 }
-.footer__inner:has(.footer__cols) .footer__cols {
-    display: contents;
-}
-.footer__inner:has(.footer__cols) .footer__cols > div {
+.footer__inner.footer__inner--guides .footer__col {
     min-width: 0;
 }
-.footer__inner:has(.footer__cols) .footer__cols h4 {
+.footer__inner.footer__inner--guides .footer__col h4 {
     font-family: var(--font-display);
     font-size: 12px;
     font-weight: 700;
@@ -320,7 +318,7 @@
     color: var(--text-primary);
     margin: 0 0 12px;
 }
-.footer__inner:has(.footer__cols) .footer__cols ul {
+.footer__inner.footer__inner--guides .footer__col ul {
     margin: 0;
     padding: 0;
     list-style: none;
@@ -328,16 +326,16 @@
     flex-direction: column;
     gap: 8px;
 }
-.footer__inner:has(.footer__cols) .footer__cols a {
+.footer__inner.footer__inner--guides .footer__col a {
     font-size: 14px;
     color: var(--neon-cyan);
 }
-.footer__inner:has(.footer__cols) .footer__cols a:hover {
+.footer__inner.footer__inner--guides .footer__col a:hover {
     color: #7FF1FF;
 }
 
 @media (max-width: 720px) {
-    .footer__inner:has(.footer__cols) {
+    .footer__inner.footer__inner--guides {
         grid-template-columns: 1fr;
         gap: 24px;
     }
