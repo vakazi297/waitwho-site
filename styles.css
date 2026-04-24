@@ -1536,8 +1536,19 @@ body.menu-open { overflow: hidden; }
     border: 1px solid rgba(0, 229, 255, .3);
     color: var(--neon-cyan);
 }
-.vignette:nth-child(2) .vignette__marker { color: var(--neon-magenta); border-color: rgba(255, 0, 255, .3); background: linear-gradient(135deg, rgba(255, 0, 255, .18), rgba(119, 57, 177, .08)); }
-.vignette:nth-child(3) .vignette__marker { color: #B78CFA; border-color: rgba(119, 57, 177, .35); background: linear-gradient(135deg, rgba(119, 57, 177, .25), rgba(0, 229, 255, .05)); }
+/* Only the small SVG tile markers — must not match .vignette__marker--wide
+   or those rules override `background: none` and paint a colored “box”
+   behind transparent PNGs (higher specificity than .vignette__marker--wide). */
+.vignette:nth-child(2) .vignette__marker:not(.vignette__marker--wide) {
+    color: var(--neon-magenta);
+    border-color: rgba(255, 0, 255, .3);
+    background: linear-gradient(135deg, rgba(255, 0, 255, .18), rgba(119, 57, 177, .08));
+}
+.vignette:nth-child(3) .vignette__marker:not(.vignette__marker--wide) {
+    color: #B78CFA;
+    border-color: rgba(119, 57, 177, .35);
+    background: linear-gradient(135deg, rgba(119, 57, 177, .25), rgba(0, 229, 255, .05));
+}
 .vignette__marker svg { width: 20px; height: 20px; }
 .vignette__marker--wide {
     width: 135px;
