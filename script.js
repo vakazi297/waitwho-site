@@ -430,11 +430,22 @@
         if (!toggle || !menu) return;
 
         const panel = menu.querySelector('.mobile-menu__panel');
-        const backdrop = menu.querySelector('.mobile-menu__backdrop');
         const linkEls = menu.querySelectorAll('a, button');
         let lastFocus = null;
 
+        /* iOS Safari ghost-click guard.
+         * On a tap, iOS fires: touchstart → touchend → (synthesized) click ~now.
+         * The click is hit-tested at the CURRENT DOM under the touch point.
+         * When the hamburger's click handler runs and opens the menu, the
+         * backdrop instantly covers the touch point (full-viewport, higher
+         * z-index than the nav). The synthesized click then lands on the
+         * backdrop → close() — the menu appears to never open.
+         * We record when we opened and suppress any close() call that would
+         * fire within the same tap window. */
+        let menuOpenedAt = 0;
+
         function open() {
+            menuOpenedAt = Date.now();
             lastFocus = document.activeElement;
             menu.classList.add('is-open');
             menu.setAttribute('aria-hidden', 'false');
@@ -459,39 +470,35 @@
             }
         }
 
+        function closeFromBackdrop(e) {
+            if (Date.now() - menuOpenedAt < 450) {
+                // Ghost click from the same tap that opened us — ignore.
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                return;
+            }
+            close();
+        }
+
         function toggleMenu() {
             if (menu.classList.contains('is-open')) close();
             else open();
         }
 
-        /* iOS Safari: rely on touchend for the toggle; synthetic click follows
-         * ~300ms later and would double-toggle (open then instantly close).
-         * Desktop / trackpad: click only. */
-        let lastTouchDrivenToggle = 0;
-        toggle.addEventListener(
-            'touchend',
-            () => {
-                lastTouchDrivenToggle = Date.now();
-                toggleMenu();
-            },
-            { passive: true }
-        );
-        toggle.addEventListener('click', (e) => {
-            if (Date.now() - lastTouchDrivenToggle < 500) {
-                e.preventDefault();
-                e.stopPropagation();
-                return;
-            }
-            toggleMenu();
-        });
-        backdrop && backdrop.addEventListener('click', close);
+        // `touch-action: manipulation` on .nav__hamburger already kills the
+        // iOS 300ms click delay, so a plain click handler is correct here.
+        toggle.addEventListener('click', toggleMenu);
 
-        // Any link or element marked with data-close-menu inside the drawer
-        // should dismiss it — this makes "tap a nav link" feel native.
-        linkEls.forEach((el) => el.addEventListener('click', close));
+        /* Backdrop + anything marked with data-close-menu inside the drawer
+         * dismiss it. Guarded against the iOS ghost click described above. */
         menu.querySelectorAll('[data-close-menu]').forEach((el) =>
-            el.addEventListener('click', close)
+            el.addEventListener('click', closeFromBackdrop)
         );
+
+        // Real taps on nav links inside the drawer — these can close immediately.
+        linkEls.forEach((el) => el.addEventListener('click', close));
 
         // Esc closes. Only active while the menu is open so we don't
         // interfere with any other keyboard handlers elsewhere.
