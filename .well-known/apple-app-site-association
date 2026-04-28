@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "HS27KW3K4Q.com.waitwho.app",
+        "paths": ["/s/*"]
+      }
+    ]
+  }
+}
